@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>The interview page</title>
+  <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+  <link href="css/cover.css" rel="stylesheet">
+  <script src="js/ie-emulation-modes-warning.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+  <script src="js/ApiAi.js"></script>
+  <script src="js/demoFunctions.js"></script>
+  <style type="text/css">
+    .spoken-response__text {
+      background-color: #040E23;
+      color: #7584A2;
+      padding: 1em;
+    }
+    .spoken-response {
+      max-height: 0;
+      overflow: hidden;
+      -webkit-transition: all 0.35s ease-in;
+    }
+    .speech_text{
+      width: 80%;
+      height: 35px;
+      position: relative;
+      top: -3.2px;
+    }
+    .input-field{
+      width: 100%;
+    }
+    .query_text{
+      color: Orange;
+    }
+    .response_text{
+      color: Cyan;
+    }
+    body{
+      background-image: url("img/interview.jpg");
+      background-repeat: no-repeat;
+      background-size: 100% 100%; 
+    }
+  </style>
+</head>
+
+<body>
+  <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+        
+          <div class="masthead clearfix">
+            <div class="inner">
+              <h3 class="masthead-brand">Interviewer</h3>
+              <nav>
+                <ul class="nav masthead-nav">
+                  <li><a href="end_page.html">End the interview</a></li>
+                </ul>
+                <ul class="nav masthead-nav" id="restart_button">
+                  <li><a href="interview_page.html">Restart the interview</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+      
+          <div class="inner cover" id="start_page">
+            <h1 class="cover-heading">The interview is ready to start....</h1>
+            <p class="lead">If you want to start the interview, please click the "start the interview" button</p>
+            <p class="lead">Make sure that you use the chrome browser and the microphone is available</p>
+            <p class="lead">
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <a href="#" class="btn btn-lg btn-default" id="set_access_token">
+              start the interview</a>
+            </p>
+          </div>
+
+          <div class="inner cover" id="main-wrapper">
+            <em>
+              <h1 class="cover-heading" id="start_heading">The interview starts....</h1>
+            </em>
+            <em id="end_heading">
+              <h1 class="cover-heading" >The interview has finished</h1>
+              <h1 class="cover-heading" >You can pressed the "view report" button to view the final report</h1>
+            </em>
+            <form>
+            <div class = "form-group form-group-lg" id="start">
+              <a href="#" class="btn btn-lg btn-default" id="rec">Speak</a>
+              <input id="speech" type="text" class="speech_text" placeholder="you can also type in here">
+              <div id="spokenResponse" class="spoken-response">
+                <div class="spoken-response__text"></div>
+              </div>
+            </div>
+            </form>
+            <form id="end_button">
+            <div class = "form-group form-group-lg">
+              <a href="result_page.html" class="btn btn-lg btn-default" id="rec">View report</a>
+            </div>
+            </form>
+            <br />
+            <br />
+            <em>
+              <h3 class="text-left">The record</h3>
+            </em>
+            <div id="result"></div>  
+            <pre id="jsonResponse"></pre>
+          </div>
+
+          
+        </div>
+      </div>
+
+  </div>
+    <script defer src="js/layout.js"></script>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>
