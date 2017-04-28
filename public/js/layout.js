@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var socket = io.connect('https://localhost:3000');
+  var socket = io.connect('https://interview-training-system.herokuapp.com/');
   var ENTER_KEY_CODE = 13;
   var queryInput, resultDiv, accessTokenInput;
   var recognition;
@@ -88,7 +88,7 @@
 
     //the record of the speech is finished successfully
     recognition.onresult = function (event) {
-      recognition.onend = null;
+      //recognition.onend = null;
 
       var text = "";
       for (var i = event.resultIndex; i < event.results.length; ++i) {

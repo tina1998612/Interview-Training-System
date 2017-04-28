@@ -145,7 +145,7 @@
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <script src="js/ie10-viewport-bug-workaround.js"></script>
   <script>
-    var socket = io.connect('https://localhost:3000');
+    var socket = io.connect('https://interview-training-system.herokuapp.com/');
     var btn_status = 0;
     // RecordRTC
     {
@@ -204,12 +204,14 @@
 
                 var emos2 = io('https://emosapi.com/');
                 //connect
+
                 emos2.on('connect', function () {
                   emos2.emit('login', { appkey: 'pJGVK5EO', appsecret: 'ef3c7e0424ec3e8db6b9f7a5cbf26128' });
                   emos2.emit('post', {
                     api: 'Personalityaudio', version: 'emotion', params: {
                       'audio': audio_string,
-                      'audio_type': 'wav'
+                      'audio_type': 'wav',
+                      'lang':'en-us',
                     }
                   });
                 });
