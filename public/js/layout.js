@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var socket = io.connect('http://localhost:3000');
+  var socket = io.connect('https://localhost:3000');
   var ENTER_KEY_CODE = 13;
   var queryInput, resultDiv, accessTokenInput;
   var recognition;
