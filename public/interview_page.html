@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -22,30 +22,36 @@
       color: #7584A2;
       padding: 1em;
     }
+    
     .spoken-response {
       max-height: 0;
       overflow: hidden;
       -webkit-transition: all 0.35s ease-in;
     }
-    .speech_text{
+    
+    .speech_text {
       width: 80%;
       height: 35px;
       position: relative;
       top: -3.2px;
     }
-    .input-field{
+    
+    .input-field {
       width: 100%;
     }
-    .query_text{
+    
+    .query_text {
       color: Orange;
     }
-    .response_text{
+    
+    .response_text {
       color: Cyan;
     }
-    body{
+    
+    body {
       background-image: url("img/interview.jpg");
       background-repeat: no-repeat;
-      background-size: 100% 100%; 
+      background-size: 100% 100%;
     }
   </style>
 </head>
@@ -53,30 +59,30 @@
 <body>
   <div class="site-wrapper">
 
-      <div class="site-wrapper-inner">
+    <div class="site-wrapper-inner">
 
-        <div class="cover-container">
+      <div class="cover-container">
 
-        
-          <div class="masthead clearfix">
-            <div class="inner">
-              <h3 class="masthead-brand">Interviewer</h3>
-              <nav>
-                <ul class="nav masthead-nav">
-                  <li><a href="end_page.html">End the interview</a></li>
-                </ul>
-                <ul class="nav masthead-nav" id="restart_button">
-                  <li><a href="interview_page.html">Restart the interview</a></li>
-                </ul>
-              </nav>
-            </div>
+
+        <div class="masthead clearfix">
+          <div class="inner">
+            <h3 class="masthead-brand">Interviewer</h3>
+            <nav>
+              <ul class="nav masthead-nav">
+                <li><a href="end_page.html">End the interview</a></li>
+              </ul>
+              <ul class="nav masthead-nav" id="restart_button">
+                <li><a href="interview_page.html">Restart the interview</a></li>
+              </ul>
+            </nav>
           </div>
-      
-          <div class="inner cover" id="start_page">
-            <h1 class="cover-heading">The interview is ready to start....</h1>
-            <p class="lead">If you want to start the interview, please click the "start the interview" button</p>
-            <p class="lead">Make sure that you use the chrome browser and the microphone is available</p>
-            <p class="lead">
+        </div>
+
+        <div class="inner cover" id="start_page">
+          <h1 class="cover-heading">The interview is ready to start....</h1>
+          <p class="lead">If you want to start the interview, please click the "start the interview" button</p>
+          <p class="lead">Make sure that you use the chrome browser and the microphone is available</p>
+          <p class="lead">
             <br />
             <br />
             <br />
@@ -85,53 +91,155 @@
             <br />
             <a href="#" class="btn btn-lg btn-default" id="set_access_token">
               start the interview</a>
-            </p>
-          </div>
+          </p>
+        </div>
 
-          <div class="inner cover" id="main-wrapper">
-            <em>
+        <div class="inner cover" id="main-wrapper">
+          <em>
               <h1 class="cover-heading" id="start_heading">The interview starts....</h1>
             </em>
-            <em id="end_heading">
+          <em id="end_heading">
               <h1 class="cover-heading" >The interview has finished</h1>
               <h1 class="cover-heading" >You can pressed the "view report" button to view the final report</h1>
             </em>
-            <form>
-            <div class = "form-group form-group-lg" id="start">
+          <form>
+            <div class="form-group form-group-lg" id="start">
               <a href="#" class="btn btn-lg btn-default" id="rec">Speak</a>
               <input id="speech" type="text" class="speech_text" placeholder="you can also type in here">
               <div id="spokenResponse" class="spoken-response">
                 <div class="spoken-response__text"></div>
               </div>
             </div>
-            </form>
-            <form id="end_button">
-            <div class = "form-group form-group-lg">
-              <a href="result_page.html" class="btn btn-lg btn-default" id="rec">View report</a>
+          </form>
+          <form id="end_button">
+            <div class="form-group form-group-lg">
+              <a href="result_page.html" class="btn btn-lg btn-default">View report</a>
             </div>
-            </form>
-            <br />
-            <br />
-            <em>
+          </form>
+          <br />
+          <br />
+          <em>
               <h3 class="text-left">The record</h3>
             </em>
-            <div id="result"></div>  
-            <pre id="jsonResponse"></pre>
-          </div>
-
-          
+          <div id="result"></div>
+          <pre id="jsonResponse"></pre>
         </div>
+
+
       </div>
+    </div>
 
   </div>
-    <script defer src="js/layout.js"></script>
-    <!-- Bootstrap core JavaScript
+  <script defer src="js/layout.js"></script>
+  <script src="https://cdn.WebRTC-Experiment.com/RecordRTC.js"></script>
+  <script src="https://cdn.webrtc-experiment.com/gumadapter.js"></script>
+  <script src='https://emosapi.com/static/socket.io/1.7.2/socket.io.min.js'></script>
+  <!-- Bootstrap core JavaScript
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-    <script src="js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="js/ie10-viewport-bug-workaround.js"></script>
-  </body>
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>
+    window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')
+  </script>
+  <script src="js/bootstrap.min.js"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="js/ie10-viewport-bug-workaround.js"></script>
+  <script>
+    var socket = io.connect('http://localhost:3000');
+    var btn_status = 0;
+    // RecordRTC
+    {
+      function successCallback(audioStream) {
+        var recordRTC = RecordRTC(audioStream);
+        recordRTC.startRecording();
+        $('#rec').click(() => {
+          btn_status = btn_status ? 0 : 1;
+          console.log($('#rec').text());
+          if (btn_status) {
+            console.log("stop recording!");
+            recordRTC.stopRecording(function (audioURL) {
+              var recordedBlob = recordRTC.getBlob();
+              recordRTC.getDataURL(function (dataURL) {
+                //window.open(dataURL);
+                var audio_string = dataURL.slice(23);
+                console.log(audio_string);
+
+                // emosapi
+                var emos = io('https://emosapi.com/');
+                //connect
+                emos.on('connect', function () {
+                  emos.emit('login', { appkey: 'pJGVK5EO', appsecret: 'ef3c7e0424ec3e8db6b9f7a5cbf26128' });
+                  emos.emit('post', {
+                    api: 'Detection', version: 'emotion', params: {
+                      'binary': audio_string,
+                      'audio_type': 'wav'
+                    }
+                  });
+                });
+                //api response
+                emos.on('response', function (data) {
+                  console.log("----1-----");
+                  console.log(data);
+                  var e = data.response.data;
+                  console.log(e);
+
+                  // send emotion audio to server
+                  socket.emit('emotion_audio', {
+                    angry: e.angry.probability,
+                    anxiety: e.anxiety.probability,
+                    criticism: e.criticism.probability,
+                    happy: e.happy.probability,
+                    loneliness: e.loneliness.probability,
+                    sad: e.sad.probability
+                  });
+                });
+                //success
+                emos.on('success', function (data) {
+                  console.log(data);
+                });
+                //failure
+                emos.on('failure', function (data) {
+                  console.log(data);
+                });
+
+                var emos2 = io('https://emosapi.com/');
+                //connect
+                emos2.on('connect', function () {
+                  emos2.emit('login', { appkey: 'pJGVK5EO', appsecret: 'ef3c7e0424ec3e8db6b9f7a5cbf26128' });
+                  emos2.emit('post', {
+                    api: 'Personalityaudio', version: 'emotion', params: {
+                      'audio': audio_string,
+                      'audio_type': 'wav'
+                    }
+                  });
+                });
+                //api response
+                emos2.on('response', function (data) {
+                  console.log(data);
+                  console.log("----2-----");
+
+                });
+                //success
+                emos2.on('success', function (data) {
+                  console.log(data);
+                });
+                //failure
+                emos2.on('failure', function (data) {
+                  console.log(data);
+                });
+              });
+            });
+          }
+        });
+      }
+
+      function errorCallback(error) {
+        // maybe another application is using the device
+      }
+      var mediaConstraints = { video: false, audio: true };
+      navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
+    }
+  </script>
+</body>
+
 </html>
