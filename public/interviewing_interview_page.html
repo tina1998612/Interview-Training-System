@@ -123,9 +123,9 @@
   <script src="js/ie10-viewport-bug-workaround.js"></script>
 
   <script>
-    var socket = io.connect('http://localhost:3000');
+    //var socket = io.connect('http://localhost:3000');
     socket.emit('start', { text: "start" });
-    //    var socket = io.connect('https://interview-training-system.herokuapp.com/');
+    var socket = io.connect('https://interview-training-system.herokuapp.com/');
     var sec = 0, min = 0, display_min, display_sec;
     $(document).ready(function () {
       setInterval(function () {

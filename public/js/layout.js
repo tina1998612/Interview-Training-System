@@ -1,8 +1,8 @@
 (function () {
   "use strict";
 
-  var socket = io.connect('http://localhost:3000');
-  //var socket = io.connect('https://interview-training-system.herokuapp.com/');
+  //var socket = io.connect('http://localhost:3000');
+  var socket = io.connect('https://interview-training-system.herokuapp.com/');
   var ENTER_KEY_CODE = 13;
   var queryInput, resultDiv, accessTokenInput;
   var recognition;
@@ -276,8 +276,8 @@
           setResponseJSON(response);
           setResponseOnNode(result, responseNode);
         }
-        if(temp == "other.end"){
-         setTimeout(function(){window.location.href = "finish_interview_page.html";}, 7000); 
+        if (temp == "other.end") {
+          setTimeout(function () { window.location.href = "finish_interview_page.html"; }, 7000);
         }
       })
       .catch(function (err) {
