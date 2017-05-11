@@ -71,7 +71,7 @@ socket.on('result', function (result_data) {
     var y = 25;
     doc.setFontType('normal');
     doc.setFontSize(18);
-    doc.text("FINAL SCORE: " + overall_score, 10, y); y += 8;
+    doc.text("FINAL SCORE: " + overall_score.toFixed(2), 10, y); y += 8;
     doc.text("Total duration: " + result_data.time.data, 10, y); y += 10;
 
     doc.setFontSize(16.5);
