@@ -2,8 +2,8 @@ var doc = new jsPDF();
 doc.setFont('times');
 var overall_score = 0, grammar_score = 0;
 
-//var socket = io.connect('http://localhost:3000');
-var socket = io.connect('https://interview-training-system.herokuapp.com/');
+var socket = io.connect('http://localhost:3000');
+//var socket = io.connect('https://interview-training-system.herokuapp.com/');
 socket.emit('end', {
     text: 'interview end'
 });
