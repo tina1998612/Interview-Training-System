@@ -2,8 +2,8 @@ var doc = new jsPDF();
 doc.setFont('times');
 var overall_score = 0, grammar_score = 0;
 
-var socket = io.connect('http://localhost:3000');
-//var socket = io.connect('https://interview-training-system.herokuapp.com/');
+//var socket = io.connect('http://localhost:3000');
+var socket = io.connect('https://interview-training-system.herokuapp.com/');
 socket.emit('end', {
     text: 'interview end'
 });
@@ -121,15 +121,17 @@ socket.on('result', function (result_data) {
     //window.open("data:application/pdf," + encodeURI(data.reply_text));
 
     setTimeout(function () {
-        if (grammar_score > 60) $('#dialog').append('<br><h3 class="text-left">Grammar score: <span class="g">' + grammar_score.toFixed(2) + '%</span></h3>');
-        else $('#dialog').append('<br><h3 class="text-left">Grammar score: <span class="r">' + grammar_score.toFixed(2) + '%</span></h3>');
+        grammar_score = grammar_score.toFixed(2);
+        if (grammar_score > 60) $('#dialog').append('<br><h3 class="text-left">Grammar score: <span class="g">' + grammar_score + '%</span></h3>');
+        else $('#dialog').append('<br><h3 class="text-left">Grammar score: <span class="r">' + grammar_score + '%</span></h3>');
 
         var text_to_append;
         overall_score = overall_score * 55 / 100 + grammar_score * 30 / 100 + (1 - result_data.emotion_audio.anxiety) * 100 * 15 / 100;
         if (sentiment_label == "negative") overall_score -= 10;
         else overall_score += 10;
-        if (overall_score > 60) text_to_append = '<br><br><hr><b><h2 class="text-left">Final Score: <span class="g">' + overall_score.toFixed(2) + '%</span></b></h2>';
-        else text_to_append = '<br><br><hr><b><h2 class="text-left">Final Score: <span class="r">' + overall_score.toFixed(2) + '%</span></b></h2>';
+        overall_score = overall_score.toFixed(2);
+        if (overall_score > 60) text_to_append = '<br><br><hr><b><h2 class="text-left">Final Score: <span class="g">' + overall_score + '%</span></b></h2>';
+        else text_to_append = '<br><br><hr><b><h2 class="text-left">Final Score: <span class="r">' + overall_score + '%</span></b></h2>';
         $('#dialog').append(text_to_append);
     }, 3000);
 
