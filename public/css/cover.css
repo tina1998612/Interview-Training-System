@@ -163,3 +163,36 @@ body {
     width: 700px;
   }
 }
+.spoken-response__text {
+      background-color: #040E23;
+      color: #7584A2;
+      padding: 1em;
+    }
+    
+    .spoken-response {
+      max-height: 0;
+      overflow: hidden;
+      -webkit-transition: all 0.35s ease-in;
+    }
+    
+    .speech_text {
+      width: 80%;
+      height: 35px;
+      position: relative;
+      top: -2px;
+      color: black;
+      border-radius: 10px;
+    }
+    
+    .query_text {
+      color: Orange;
+    }
+    
+    .response_text {
+      color: Cyan;
+    }
+    
+    body {
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+    }

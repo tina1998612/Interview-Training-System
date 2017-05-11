@@ -1,7 +1,8 @@
 (function () {
   "use strict";
 
-  var socket = io.connect('https://interview-training-system.herokuapp.com/');
+  var socket = io.connect('http://localhost:3000');
+  //var socket = io.connect('https://interview-training-system.herokuapp.com/');
   var ENTER_KEY_CODE = 13;
   var queryInput, resultDiv, accessTokenInput;
   var recognition;
@@ -26,16 +27,30 @@
         none
   */
   function init() {
+    document.getElementById("input").style.display = "none";
     queryInput = document.getElementById("q");
     resultDiv = document.getElementById("result");
     accessTokenInput = "326ac049e8924a699f3c5f5bc601b424";
-    var setAccessTokenButton = document.getElementById("set_access_token");
-    var setStartSpeakingButton = document.getElementById("start_speaking");
-    document.getElementById("main-wrapper").style.display = "none";
-    document.getElementById("restart_button").style.display = "none";
-    //queryInput.addEventListener("keydown", queryInputKeyDown);
-    setAccessTokenButton.addEventListener("click", setAccessToken);
+    window.init(accessTokenInput);
+    var value = "0000start0000";
+    var responseNode = createResponseNode();
+    sendText(value)
+      .then(function (response) {
+        var result;
+        try {
+          result = response.result.fulfillment.speech;
+        } catch (error) {
+          result = "";
+        }
+        setResponseJSON(response);
+        setResponseOnNode(result, responseNode);
+      })
+      .catch(function (err) {
+        setResponseJSON(err);
+        setResponseOnNode("Something goes wrong", responseNode);
+      });
   }
+
 
   //jQuery function for the "speak" button.
   $(document).ready(function () {
@@ -82,6 +97,7 @@
 
     //the record of the speech is processing    
     recognition.onstart = function (event) {
+      console.log("start");
       respond(messageRecording);
       updateRec();
     };
@@ -100,7 +116,7 @@
 
     //the record of the speech is failed
     recognition.onend = function () {
-      respond(messageCouldntHear);
+      //respond(messageCouldntHear);
       stopRecognition();
     };
     recognition.lang = "en-US";
@@ -198,34 +214,23 @@
     emos3.on('connect', function () {
       emos3.emit('login', { appkey: 'pJGVK5EO', appsecret: 'ef3c7e0424ec3e8db6b9f7a5cbf26128' });
       emos3.emit('post', { api: 'Personality', version: 'emotion', params: { 'text': value, 'lang': 'en-us', } });
-    });
-    //api response
-    emos3.on('response', function (data) {
-      console.log("----3-----");
-      console.log(data);
-      var e = data.response;
-      e = JSON.parse(e);
-      socket.emit('personality_text', {
-        formality: e.formality,
-        intuition: e.intuition,
-        thinking: e.thinking,
-        judging: e.judging
+      //api response
+      emos3.on('response', function (data) {
+        var e = data.response;
+        e = JSON.parse(e);
+        socket.emit('personality_text', {
+          formality: e.formality,
+          intuition: e.intuition,
+          thinking: e.thinking,
+          judging: e.judging
+        });
       });
-      console.log({
-        formality: e.formality,
-        intuition: e.intuition,
-        thinking: e.thinking,
-        judging: e.judging
+      //success
+      emos3.on('success', function (data) {
       });
-      console.log("socket emit");
-    });
-    //success
-    emos3.on('success', function (data) {
-      console.log(data);
-    });
-    //failure
-    emos3.on('failure', function (data) {
-      console.log(data);
+      //failure
+      emos3.on('failure', function (data) {
+      });
     });
 
     //sentiment recognition
@@ -234,24 +239,20 @@
     emos4.on('connect', function () {
       emos4.emit('login', { appkey: 'pJGVK5EO', appsecret: 'ef3c7e0424ec3e8db6b9f7a5cbf26128' });
       emos4.emit('post', { api: 'Sentiment', version: 'emotion', params: { 'text': value, 'lang': 'en-us', } });
-    });
-    //api response
-    emos4.on('response', function (data) {
-      console.log(data);
-      var e = data.response;
-      e = JSON.parse(e);
-      socket.emit('sentiment_text', {
-        score: e.score,
-        sentiment: e.label
+      //api response
+      emos4.on('response', function (data) {
+        var e = data.response;
+        e = JSON.parse(e);
+        socket.emit('sentiment_text', {
+          sentiment_score: e.score
+        });
       });
-    });
-    //success
-    emos4.on('success', function (data) {
-      console.log(data);
-    });
-    //failure
-    emos4.on('failure', function (data) {
-      console.log(data);
+      //success
+      emos4.on('success', function (data) {
+      });
+      //failure
+      emos4.on('failure', function (data) {
+      });
     });
     var responseNode = createResponseNode();
     var temp;
@@ -264,14 +265,19 @@
         } catch (error) {
           result = "";
         }
-        setResponseJSON(response);
-        setResponseOnNode(result, responseNode);
-        if (temp == "test.end") {
-          console.log("test end");
-          document.getElementById("start_heading").style.display = "none";
-          document.getElementById("start").style.display = "none";
-          document.getElementById("end_heading").style.display = "block";
-          document.getElementById("end_button").style.display = "block";
+        if (response.result.action[0] != 'g' && response.result.action[0] != 'b') {
+          response.result.action = "n";
+        }
+        socket.emit('reply', (response.result.action) + " " + value + '\n' + result);
+        if (temp == "abuse language") {
+          window.location.href = "abusive.html";
+        }
+        else {
+          setResponseJSON(response);
+          setResponseOnNode(result, responseNode);
+        }
+        if(temp == "other.end"){
+         setTimeout(function(){window.location.href = "finish_interview_page.html";}, 7000); 
         }
       })
       .catch(function (err) {
@@ -307,88 +313,6 @@
     }
 
     $("#spokenResponse").addClass("is-active").find(".spoken-response__text").html(val);
-  }
-
-  /*
-  Function: setAccessToken
-
-  The setAccessToken() will be call when the "start the interview" is called.
-  The function will show the "main-wrapper" and hide the "start page" and "jsonResponse"
-
-  Parameters:
-      none
-
-  Returns:
-      none
- */
-
-  function setAccessToken() {
-    document.getElementById("start_page").style.display = "none";
-    document.getElementById("main-wrapper").style.display = "block";
-    document.getElementById("end_heading").style.display = "none";
-    document.getElementById("jsonResponse").style.display = "none";
-    document.getElementById("end_button").style.display = "none";
-    document.getElementById("restart_button").style.display = "block";
-    window.init(accessTokenInput);
-    console.log("start send the first query");
-    var value = "0000start0000";
-    var responseNode = createResponseNode();
-    sendText(value)
-      .then(function (response) {
-        var result;
-        try {
-          result = response.result.fulfillment.speech;
-        } catch (error) {
-          result = "";
-        }
-        setResponseJSON(response);
-        setResponseOnNode(result, responseNode);
-      })
-      .catch(function (err) {
-        setResponseJSON(err);
-        setResponseOnNode("Something goes wrong", responseNode);
-      });
-    console.log("finish the first query sending");
-  }
-
-  /*
-  Function: queryInputKeyDown
-
-  queryInputKeyDown() will send the speech of the interviewee to the dialog system 
-
-  Parameters:
-      event
-
-  Returns:
-      none
-  */
-
-  function queryInputKeyDown(event) {
-    if (event.which !== ENTER_KEY_CODE) {
-      return;
-    }
-
-    var value = queryInput.value;
-    queryInput.value = "";
-
-    createQueryNode(value);
-    var responseNode = createResponseNode();
-
-    sendText(value)
-      .then(function (response) {
-        var result;
-        try {
-          result = response.result.fulfillment.speech
-        } catch (error) {
-          result = "";
-        }
-        setResponseJSON(response);
-        setResponseOnNode(result, responseNode);
-      })
-      .catch(function (err) {
-        setResponseJSON(err);
-        setResponseOnNode("Something goes wrong", responseNode);
-      });
   }
 
   /*
@@ -463,23 +387,28 @@
     node.innerHTML = response ? response : "[empty response]";
     node.setAttribute('data-actual-response', response);
     var speaking = false;
-
     function speakNode() {
+      document.getElementById("input").style.display = "none";
+      document.getElementById("empty").style.display = "block";
+      //document.getElementById("rec").pointerEvents = "none";
       if (!response || speaking) {
         return;
       }
       speaking = true;
       tts(response)
-        .then(function () { speaking = false })
+        .then(function () { speaking = false; })
         .catch(function (err) {
           speaking = false;
           Materialize.toast(err, 2000, 'red lighten-1');
         });
+      setTimeout(function () { document.getElementById("input").style.display = "block"; document.getElementById("empty").style.display = "none"; }, 8000);
     }
 
     node.addEventListener("click", speakNode);
     speakNode();
   }
+
+
 
 
   //not used now

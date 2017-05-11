@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>The interview page -- interviewing page</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+  <link href="css/cover.css" rel="stylesheet">
+  <script src="js/ie-emulation-modes-warning.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+  <script src='https://emosapi.com/static/socket.io/1.7.2/socket.io.min.js'></script>
+  <script src="js/ApiAi.js"></script>
+  <script src="js/demoFunctions.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+    rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic'
+    rel='stylesheet' type='text/css'>
+
+  <link href="css/interviewer_creative.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+                </button>
+        <a class="navbar-brand page-scroll" href="#page-top">Interviewer</a>
+      </div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a class="page-scroll" href="finish_interview_page.html">End the interview</a>
+          </li>
+          <li>
+            <a href="ready_interview_page.html">Restart the interview</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <header>
+    <div class="header-content">
+      <div class="header-content-inner">
+        <div id="timer" style="float: right">
+        </div>
+        <div id="interviewer-image">
+          <img src="img/interviewer.jpg" style="height: 50vh; width:auto">
+        </div>
+        <br />
+        <br />
+        <br />
+        <form>
+          <div class="form-group form-group-lg" id="start">
+            <div id="empty">
+              <br />
+              <br />
+            </div>
+            <div id="input">
+              <a class="btn btn-lg btn-default" id="rec">Speak</a>
+              <input id="speech" type="text" class="speech_text" placeholder="  you can also type in here">
+            </div>
+            <div id="spokenResponse" class="spoken-response">
+              <div class="spoken-response__text"></div>
+            </div>
+          </div>
+        </form>
+        <br>
+
+        <div id="record">
+          <div id="result"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+
+  <!-- jQuery -->
+  <script src="js/jquery.js"></script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="js/bootstrap.min.js"></script>
+
+  <!-- Plugin JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+
+  <script type="text/javascript">
+    $(function () {
+      $("[data-toggle='popover']").popover();
+    });
+  </script>
+
+  <script defer src="js/layout.js"></script>
+  <script src="https://cdn.WebRTC-Experiment.com/RecordRTC.js"></script>
+  <script src="https://cdn.webrtc-experiment.com/gumadapter.js"></script>
+  <!-- Bootstrap core JavaScript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>
+    window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')
+  </script>
+  <script src="js/bootstrap.min.js"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="js/ie10-viewport-bug-workaround.js"></script>
+
+  <script>
+    var socket = io.connect('http://localhost:3000');
+    socket.emit('start', { text: "start" });
+    //    var socket = io.connect('https://interview-training-system.herokuapp.com/');
+    var sec = 0, min = 0, display_min, display_sec;
+    $(document).ready(function () {
+      setInterval(function () {
+        display_min = min.toString();
+        display_sec = sec.toString();
+        if (display_min.length < 2) display_min = "0" + display_min;
+        if (display_sec.length < 2) display_sec = "0" + display_sec;
+        $('#timer').text(display_min + " : " + display_sec);
+        socket.emit('time', display_min + " : " + display_sec);
+        sec++;
+        if (sec == 60) {
+          sec -= 60;
+          min++;
+        }
+      }, 1000);
+    });
+
+    // RecordRTC
+    {
+      function successCallback(audioStream) {
+        var recordRTC = RecordRTC(audioStream);
+
+        $('#rec').click(() => {
+          recordRTC.startRecording();
+          setTimeout(function () {
+            console.log("stop recording!");
+            recordRTC.stopRecording(function (audioURL) {
+              var recordedBlob = recordRTC.getBlob();
+              recordRTC.getDataURL(function (dataURL) {
+                //window.open(dataURL);
+                var audio_string = dataURL.slice(23);
+                //console.log(audio_string);
+
+                // emosapi
+                var emos = io('https://emosapi.com/');
+                //connect
+                emos.on('connect', function () {
+                  emos.emit('login', { appkey: 'pJGVK5EO', appsecret: 'ef3c7e0424ec3e8db6b9f7a5cbf26128' });
+                  emos.emit('post', {
+                    api: 'Detection', version: 'emotion', params: {
+                      'binary': audio_string,
+                      'audio_type': 'wav'
+                    }
+                  });
+                  //api response
+                  emos.on('response', function (data) {
+                    console.log("----1-----");
+                    //console.log(data);
+                    var e = data.response.data;
+                    //console.log(e);
+
+                    // send emotion audio to server
+                    socket.emit('emotion_audio', {
+                      angry: e.angry.probability,
+                      anxiety: e.anxiety.probability,
+                      criticism: e.criticism.probability,
+                      happy: e.happy.probability,
+                      loneliness: e.loneliness.probability,
+                      sad: e.sad.probability
+                    });
+                  });
+                  //success
+                  emos.on('success', function (data) {
+                  });
+                  //failure
+                  emos.on('failure', function (data) {
+                    console.log(data);
+                  });
+
+                });
+
+                var emos2 = io('https://emosapi.com/');
+                //connect
+
+                emos2.on('connect', function () {
+                  emos2.emit('login', { appkey: 'pJGVK5EO', appsecret: 'ef3c7e0424ec3e8db6b9f7a5cbf26128' });
+                  emos2.emit('post', {
+                    api: 'Personalityaudio', version: 'emotion', params: {
+                      'audio': audio_string,
+                      'audio_type': 'wav',
+                      'lang': 'en-us',
+                    }
+                  });
+                  //api response
+                  emos2.on('response', function (data) {
+                    console.log("----2-----");
+                  });
+                  //success
+                  emos2.on('success', function (data) {
+                  });
+                  //failure
+                  emos2.on('failure', function (data) {
+                    console.log(data);
+                  });
+                });
+              });
+            });
+          }, 3000);
+
+        });
+      }
+
+      function errorCallback(error) {
+        console.log(error);
+        // maybe another application is using the device
+      }
+      var mediaConstraints = { video: false, audio: true };
+      navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
+    }
+  </script>
+
+
+</body>
+
+</html>
