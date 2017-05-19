@@ -78,7 +78,7 @@ con.once('open', function () {
         });
         socket.on('emotion_audio', function (data) {
             // take the average of all data
-            //console.log("audio!!!");
+            console.log("audio!!!");
             test.emotion_audio.angry = (test.emotion_audio.angry + data.angry) / 2;
             test.emotion_audio.anxiety = (test.emotion_audio.anxiety + data.anxiety) / 2;
             test.emotion_audio.criticism = (test.emotion_audio.criticism + data.criticism) / 2;
@@ -88,7 +88,7 @@ con.once('open', function () {
             var arr = test.emotion_audio.anxiety_arr.slice(0);
             arr.push(data.anxiety);
             test.emotion_audio.anxiety_arr = arr;
-            //console.log(test.emotion_audio.anxiety_arr);
+            console.log(test.emotion_audio.anxiety_arr);
         });
         socket.on('personality_text', function (data) {
             test.personality_text.formality = (test.personality_text.formality + data.formality) / 2;

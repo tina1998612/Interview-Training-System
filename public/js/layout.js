@@ -30,7 +30,7 @@
     document.getElementById("input").style.display = "none";
     queryInput = document.getElementById("q");
     resultDiv = document.getElementById("result");
-    accessTokenInput = "326ac049e8924a699f3c5f5bc601b424";
+    accessTokenInput = "afae01fa246444cda4cad571309fd268";
     window.init(accessTokenInput);
     var value = "0000start0000";
     var responseNode = createResponseNode();
