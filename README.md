@@ -21,8 +21,8 @@ Available [here](https://interview-training-system.herokuapp.com) on heroku, or 
 ![demo img](img/mainPage.png)
 
 ## Usage
-1. Install the dependecies
+1. Install the dependecies<br>
 `npm install`
-2. Start this project! :)
+2. Start this project!<br>
 `npm start`
 
