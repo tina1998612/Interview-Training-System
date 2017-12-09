@@ -7,10 +7,11 @@ For more details, see our [Software Requirements Specifications Document](http:/
 #### Note that a video of the interviewee throughout the interview process will be recorded for analysis.<br> 
 
 ## Technology
-1. Facial recognition
-2. Speech recognition
-3. Emotion analysis of nervousness from audio and behavior
-4. Characteristic analysis from audio and behavior
+1. Natural Language Processing
+2. Facial recognition
+3. Speech recognition
+4. Emotion analysis of nervousness from audio and behavior
+5. Characteristic analysis from audio and behavior
 
 ## Demo
 Available [here](https://interview-training-system.herokuapp.com) on heroku, or see it on [youtube](https://www.youtube.com/watch?v=FwZaa4B095Q).  
